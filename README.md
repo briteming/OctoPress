@@ -2,6 +2,15 @@
 
 Turn your GitHub Issues into a CMS for your blog! 🎉
 
+[![Visitors](https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fgithub.com%2FSH20RAJ%2FOctoPress&countColor=%23dce775&style=flat)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FSH20RAJ%2FOctoPress)
+[![GitHub license](https://img.shields.io/github/license/SH20RAJ/OctoPress)](https://github.com/SH20RAJ/OctoPress/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/SH20RAJ/OctoPress)](https://github.com/SH20RAJ/OctoPress/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/SH20RAJ/OctoPress)](https://github.com/SH20RAJ/OctoPress/issues)
+[![GitHub forks](https://img.shields.io/github/forks/SH20RAJ/OctoPress)](https://github.com/SH20RAJ/OctoPress/network)
+[![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2FSH20RAJ%2FOctoPress)](https://twitter.com/intent/tweet?text=Check%20out%20OctoPress!&url=https%3A%2F%2Fgithub.com%2FSH20RAJ%2FOctoPress)
+
+![OctoPress](https://socialify.git.ci/SH20RAJ/OctoPress/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&stargazers=1&theme=Auto)
+
 ## Description
 Why let your GitHub Issues just sit there when they can **do more**? With OctoPress, you can create and manage your blog using GitHub Issues, combining seamless content management with GitHub's excellent versioning and collaboration features. Add some labels, craft your posts, and let OctoPress do the rest. Say goodbye to complex CMS setups and hello to your GitHub-powered blogging adventure. 🚀
 

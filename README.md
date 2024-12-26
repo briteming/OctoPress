@@ -1,49 +1,68 @@
-# 🐙 OctoPress
-
-Turn your GitHub Issues into a CMS for your blog! 🎉
-
-## Description
-Why let your GitHub Issues just sit there when they can **do more**? With OctoPress, you can create and manage your blog using GitHub Issues, combining seamless content management with GitHub's excellent versioning and collaboration features. Add some labels, craft your posts, and let OctoPress do the rest. Say goodbye to complex CMS setups and hello to your GitHub-powered blogging adventure. 🚀
-
-Inspired by [github-blog](https://github.com/renatorib/github-blog), OctoPress takes the idea to the next level with improved UI and enhanced SEO capabilities. Built with ❤️ by [Shaswat Raj](https://github.com/sh20raj), a passionate open-source contributor who loves to make life simpler for developers.
-
-## Features
-- **Blazing Fast Setup:** No installation headaches. Just plug in and play!
-- **Label Management:** Use labels to categorize and organize your posts.
-- **Best-in-Class SEO:** Boost your blog's visibility with baked-in optimization, including auto-generation of `sitemap.xml`, `opensearch.xml`, Open Graph images, and more.
-- **GitHub Integration:** Your blog, your repo—manage it all with Issues.
-- **Database-Free Option:** Create a blog without a database subscription by using GitHub Issues and APIs.
-- **Next.js for SSR:** Built with Next.js for server-side rendering, ensuring optimal SEO.
-- **React Option:** Use plain React for deployment on various platforms for free (but with SEO limitations).
-- **Cloudflare Deployment:** Deploy effortlessly on Cloudflare's full-stack Next.js edge for free.
-
-## What You Can Do
-- **Fetch Posts:** Easily retrieve posts based on specific criteria like type, state, and labels.
-- **Fetch Comments:** Access all comments for a specific post.
-- **Search Posts:** Search posts by keywords or terms.
-- **Sort and Paginate:** Sort posts by interactions, dates, or reactions, and paginate using limits, offsets, or cursors.
-- **Auto-Generate SEO Assets:** Automatically generate SEO-friendly assets like `sitemap.xml`, `opensearch.xml`, and Open Graph images.
-- **Query Management:** Leverage advanced GitHub query capabilities with AND logic, exclusions, and multi-value parameters.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
 
 ## Getting Started
-1. **Fork this Repo:** 
+
+First, run the development server:
+
 ```bash
-git clone https://github.com/SH20RAJ/OctoPress ./ 
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
-2. **Set Up Config:** Add your GitHub repo details.
-3. **Run Locally:** `npm install && npm run dev`
-4. **Deploy:** Push to your GitHub Pages, Cloudflare, or your favorite hosting platform.
 
-## Contributing
-We ❤️ contributions! If you have an idea to make OctoPress better, feel free to open an Issue or submit a PR. Let’s build something awesome together.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## About Me
-Hi, I’m [Shaswat Raj](https://github.com/sh20raj), a first-year student and avid open-source enthusiast. I'm on a journey to contribute to open-source projects and aim to participate in GSoC 2025. You can also find me on [Twitter](https://twitter.com/sh20raj) where I share my thoughts and updates.
+## Cloudflare integration
 
-## License
-MIT License
+Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
+  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
+  - `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+  - `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 
----
+> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/main/internal-packages/next-dev/README.md#recommended-development-workflow))
 
-Turn your GitHub Issues into something extraordinary. Ready to blog the GitHub way? **Start with OctoPress today!**
+### Bindings
 
+Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings/) are what allows you to interact with resources available in the Cloudflare Platform.
+
+You can use bindings during development, when previewing locally your application and of course in the deployed application:
+
+- To use bindings in dev mode you need to define them in the `next.config.js` file under `setupDevBindings`, this mode uses the `next-dev` `@cloudflare/next-on-pages` submodule. For more details see its [documentation](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md).
+
+- To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+
+- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+
+#### KV Example
+
+`c3` has added for you an example showing how you can use a KV binding.
+
+In order to enable the example:
+- Search for javascript/typescript lines containing the following comment:
+  ```ts
+  // KV Example:
+  ```
+  and uncomment the commented lines below it (also uncomment the relevant imports).
+- Do the same in the `wrangler.toml` file, where
+  the comment is:
+  ```
+  # KV Example:
+  ```
+- If you're using TypeScript run the `cf-typegen` script to update the `env.d.ts` file:
+  ```bash
+  npm run cf-typegen
+  # or
+  yarn cf-typegen
+  # or
+  pnpm cf-typegen
+  # or
+  bun cf-typegen
+  ```
+
+After doing this you can run the `dev` or `preview` script and visit the `/api/hello` route to see the example in action.
+
+Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV_NAMESPACE` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.

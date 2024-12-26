@@ -26,7 +26,10 @@ Inspired by [github-blog](https://github.com/renatorib/github-blog), OctoPress t
 - **Query Management:** Leverage advanced GitHub query capabilities with AND logic, exclusions, and multi-value parameters.
 
 ## Getting Started
-1. **Fork this Repo:** [Your GitHub Link Here]
+1. **Fork this Repo:** 
+```bash
+git clone https://github.com/SH20RAJ/OctoPress ./ 
+```
 2. **Set Up Config:** Add your GitHub repo details.
 3. **Run Locally:** `npm install && npm run dev`
 4. **Deploy:** Push to your GitHub Pages, Cloudflare, or your favorite hosting platform.

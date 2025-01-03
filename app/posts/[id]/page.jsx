@@ -1,87 +1,159 @@
-export async function generateMetadata({ params }) {
-  // In a real implementation, this would fetch the post data from GitHub Issues API
-  return {
-    title: `Blog Post ${params.id} - OctoPress`,
-    description: 'Read this interesting blog post on OctoPress.',
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { siteConfig } from '../../config';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+export default function PostPage() {
+  const params = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchPost();
+  }, [params.id]);
+
+  async function fetchPost() {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${siteConfig.github.repo}/issues/${params.id}`, {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch post');
+      }
+
+      const issue = await response.json();
+      setPost({
+        title: issue.title,
+        body: issue.body,
+        createdAt: issue.created_at,
+        author: {
+          name: issue.user.login,
+          avatarUrl: issue.user.avatar_url,
+          url: issue.user.html_url,
+        },
+        labels: issue.labels,
+        reactions: issue.reactions,
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+          <h1 className="text-red-600 dark:text-red-400 text-lg font-medium">Error loading post</h1>
+          <p className="text-red-500 dark:text-red-300">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+          <h1 className="text-yellow-600 dark:text-yellow-400 text-lg font-medium">Post not found</h1>
+          <p className="text-yellow-500 dark:text-yellow-300">The requested post could not be found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <article className="max-w-4xl mx-auto px-4 py-12">
+      {/* Post Header */}
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          {post.title}
+        </h1>
+        <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-2">
+            <img
+              src={post.author.avatarUrl}
+              alt={post.author.name}
+              className="w-6 h-6 rounded-full"
+            />
+            <a href={post.author.url} className="hover:text-primary-600 dark:hover:text-primary-400">
+              {post.author.name}
+            </a>
+          </div>
+          <span>•</span>
+          <time dateTime={post.createdAt}>
+            {new Date(post.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </time>
+        </div>
+        {post.labels.length > 0 && (
+          <div className="flex gap-2 mt-4">
+            {post.labels.map(label => (
+              <span
+                key={label.id}
+                className="px-2 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              >
+                {label.name}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {/* Post Content */}
+      <div className="prose dark:prose-invert max-w-none">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {post.body}
+        </ReactMarkdown>
+      </div>
+
+      {/* Reactions */}
+      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
+        <div className="flex gap-4">
+          {Object.entries(post.reactions).map(([reaction, count]) => {
+            if (reaction === 'total_count' || count === 0) return null;
+            return (
+              <div key={reaction} className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                <span>{getReactionEmoji(reaction)}</span>
+                <span>{count}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </article>
+  );
 }
 
-export default function PostPage({ params }) {
-  return (
-    <div className="bg-white py-24 sm:py-32">
-      <article className="mx-auto max-w-3xl px-6 lg:px-8">
-        <div className="mx-auto">
-          <div className="flex items-center gap-x-4 text-xs">
-            <time dateTime="2025-01-03" className="text-gray-500">
-              Jan 3, 2025
-            </time>
-            <span className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
-              Tutorial
-            </span>
-          </div>
-          
-          <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900">
-            Example Blog Post Title {params.id}
-          </h1>
-          
-          <div className="mt-4 flex items-center gap-x-4">
-            <div className="text-sm leading-6">
-              <p className="font-semibold text-gray-900">Shaswat Raj</p>
-              <p className="text-gray-600">5 min read</p>
-            </div>
-          </div>
-
-          <div className="mt-10 prose prose-lg prose-blue">
-            <p>
-              This is a placeholder for the blog post content. In the actual implementation, 
-              this would be pulled from the GitHub Issues content and rendered as markdown.
-            </p>
-            
-            <h2>Introduction</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-
-            <h2>Main Content</h2>
-            <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-              fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-              culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-
-            <h2>Conclusion</h2>
-            <p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-              doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-              veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
-          </div>
-
-          {/* Comments Section */}
-          <div className="mt-16 border-t border-gray-200 pt-10">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Comments</h2>
-            <div className="mt-8 space-y-8">
-              {/* This would be populated from GitHub Issues comments */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="h-10 w-10 rounded-full bg-gray-200"></div>
-                </div>
-                <div>
-                  <div className="text-sm">
-                    <span className="font-semibold text-gray-900">John Doe</span>
-                    <span className="ml-2 text-gray-500">2 days ago</span>
-                  </div>
-                  <div className="mt-1 text-sm text-gray-700">
-                    Great article! Thanks for sharing.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
-  )
+function getReactionEmoji(reaction) {
+  const emojis = {
+    '+1': '👍',
+    '-1': '👎',
+    laugh: '😄',
+    hooray: '🎉',
+    confused: '😕',
+    heart: '❤️',
+    rocket: '🚀',
+    eyes: '👀',
+  };
+  return emojis[reaction] || reaction;
 }

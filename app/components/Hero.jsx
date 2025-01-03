@@ -34,7 +34,7 @@ export function Hero() {
           <div className="mt-16 flow-root sm:mt-24">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 dark:bg-white/5 dark:ring-white/10 lg:-m-4 lg:rounded-2xl lg:p-4">
               <img
-                src="https://socialify.git.ci/SH20RAJ/OctoPress/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&stargazers=1&theme=Auto"
+                src="/og-image.png"
                 alt="App screenshot"
                 width={2432}
                 height={1442}

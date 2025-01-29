@@ -1,19 +1,19 @@
 export const siteConfig = {
   // Basic site info
-  title: "OctoPress",
+  title: "OctoPress blog of brite",
   description: "A modern blog platform powered by GitHub Issues",
   logo: "🐙",
   
   // Layout Configuration
   layout: {
     showLandingPage: true, // Set to false to show posts directly
-    postsPerPage: 10,
-    defaultView: 'grid', // 'grid' or 'list'
+    postsPerPage: 5,
+    defaultView: 'list', // 'grid' or 'list'
   },
 
   // GitHub Configuration
   github: {
-    repo: process.env.GITHUB_REPO || "SH20RAJ/OctoPress",
+    repo: process.env.GITHUB_REPO || "briteming/OctoPress",
     branch: "main",
     // Optional: Custom label configuration
     labels: {
